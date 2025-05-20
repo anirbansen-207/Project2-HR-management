@@ -25,17 +25,20 @@ export default function LoginPage() {
     setError("");
 
     try {
-      // Create FormData from state variables
       const formData = new FormData();
       formData.append("email", email);
       formData.append("password", password);
 
       await formAction(formData);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Auth error:", err);
-      setError(
-        err?.message || "Authentication failed. Please check your credentials."
-      );
+      if (err instanceof Error) {
+        setError(
+          err.message || "Authentication failed. Please check your credentials."
+        );
+      } else {
+        setError("Authentication failed. Please check your credentials.");
+      }
     } finally {
       setLoading(false);
     }
@@ -111,4 +114,3 @@ export default function LoginPage() {
     </Box>
   );
 }
-
